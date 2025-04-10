@@ -6,12 +6,15 @@ import {Calendar} from '@/components/ui/calendar';
 import {Button} from '@/components/ui/button';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {cn} from '@/lib/utils';
-import {format} from 'date-fns';
+import {format, isPast, isToday} from 'date-fns';
 import {useRouter} from 'next/navigation';
+import {SunIcon, MoonIcon} from 'lucide-react';
+import {useTheme} from 'next-themes';
 
 export default function Home() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const router = useRouter();
+  const {theme, setTheme} = useTheme();
 
   const handleTopicClick = (topic: string) => {
     router.push(`/research/${topic}`);
@@ -19,9 +22,26 @@ export default function Home() {
 
   const topics = ['Topic 1', 'Topic 2', 'Topic 3']; // Example topics
 
+  const isFutureDate = date ? !isPast(date) && !isToday(date) : false;
+  const isPastDate = date ? isPast(date) : false;
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Quebrain - AI Research Tool</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold">Quebrain - AI Research Tool</h1>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        >
+          {theme === 'dark' ? (
+            <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 transition-all dark:-rotate-90" />
+          ) : (
+            <MoonIcon className="h-[1.2rem] w-[1.2rem] rotate-90 transition-all dark:rotate-0" />
+          )}
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </div>
 
       {/* Date Picker */}
       <div className="mb-4">
@@ -49,8 +69,12 @@ export default function Home() {
         </Popover>
       </div>
 
-      {/* Topic Input Form */}
-      <TopicInputForm selectedDate={date} />
+      {/* Topic Input Form - Conditionally rendered */}
+      {date && !isPastDate && (
+        <div className="mb-4 border rounded-md p-4">
+          <TopicInputForm selectedDate={date} />
+        </div>
+      )}
 
       {/* Topic List Display */}
       <div>
@@ -59,7 +83,7 @@ export default function Home() {
         </h2>
         <ul>
           {topics.map((topic) => (
-            <li key={topic} className="mb-2">
+            <li key={topic} className="mb-2 border-b pb-2">
               <div className="flex items-center justify-between">
                 <span>{topic}</span>
                 <Button onClick={() => handleTopicClick(topic)}>
@@ -69,6 +93,16 @@ export default function Home() {
             </li>
           ))}
         </ul>
+        {isPastDate && (
+          <p className="text-sm text-muted-foreground mt-2">
+            Adding topics for past dates is not allowed.
+          </p>
+        )}
+        {isFutureDate && (
+          <p className="text-sm text-muted-foreground mt-2">
+            Please select current or past date
+          </p>
+        )}
       </div>
     </div>
   );
