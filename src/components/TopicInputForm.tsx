@@ -1,18 +1,16 @@
-
 'use client';
 
 import {useState} from 'react';
-import {Calendar} from '@/components/ui/calendar';
 import {Button} from '@/components/ui/button';
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
-import {cn} from '@/lib/utils';
-import {format} from 'date-fns';
 import {Input} from '@/components/ui/input';
 import {useToast} from '@/hooks/use-toast';
 
-export function TopicInputForm() {
+interface TopicInputFormProps {
+  selectedDate: Date | undefined;
+}
+
+export function TopicInputForm({selectedDate}: TopicInputFormProps) {
   const [topic, setTopic] = useState('');
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const {toast} = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,7 +24,7 @@ export function TopicInputForm() {
       return;
     }
 
-    console.log('Topic:', topic, 'Date:', date);
+    console.log('Topic:', topic, 'Date:', selectedDate);
 
     toast({
       title: 'Success',
@@ -37,7 +35,7 @@ export function TopicInputForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mb-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div>
           <label htmlFor="topic" className="block text-sm font-medium text-gray-700">
             Topic:
@@ -49,33 +47,6 @@ export function TopicInputForm() {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
           />
-        </div>
-        <div>
-          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-            Date:
-          </label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={'outline'}
-                className={cn(
-                  'w-full justify-start text-left font-normal',
-                  !date && 'text-muted-foreground'
-                )}
-              >
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                disabled={(date) => date > new Date()}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
         </div>
       </div>
       <Button type="submit" className="mt-4">
