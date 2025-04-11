@@ -2,6 +2,9 @@ import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from '@/components/ui/toaster';
+import {ThemeProvider} from '@/components/ThemeProvider';
+
+import {metadata} from './metadata';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -13,11 +16,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: 'Quebrain',
-  description: 'AI Research Tool',
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,8 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
