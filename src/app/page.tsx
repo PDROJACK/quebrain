@@ -66,7 +66,7 @@ export default function Home() {
         <SidebarProvider>
           <div className="flex min-h-screen">
             <Sidebar />
-            <div className="container mx-auto p-4 flex-grow">
+            <div className="flex-grow p-4">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold">Quebrain</h1>
                 <Button
