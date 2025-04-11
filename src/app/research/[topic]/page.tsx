@@ -9,7 +9,6 @@ interface ResearchPageProps {
   params: {topic: string};
 }
 
-
 export default function ResearchPage({params}: ResearchPageProps) {
   const {topic} = use(params);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

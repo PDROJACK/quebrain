@@ -15,6 +15,7 @@ import {useAuth} from '@/hooks/useAuth';
 import {Loader2} from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import {SidebarProvider} from '@/components/ui/sidebar';
+import React from 'react';
 
 const TopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
   ssr: false,
@@ -109,7 +110,9 @@ export default function Home() {
 
               {date && !isPastDate && (
                 <div className="mb-4 border rounded-md p-4">
-                  <TopicInputForm selectedDate={date} />
+                  <React.Suspense fallback={<div>Loading...</div>}>
+                    <TopicInputForm selectedDate={date} />
+                  </React.Suspense>
                 </div>
               )}
 
