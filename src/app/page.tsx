@@ -1,7 +1,6 @@
 'use client';
 
-import {TopicInputForm} from '@/components/TopicInputForm';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Calendar} from '@/components/ui/calendar';
 import {Button} from '@/components/ui/button';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
@@ -10,6 +9,11 @@ import {format, isPast, isToday} from 'date-fns';
 import {useRouter} from 'next/navigation';
 import {SunIcon, MoonIcon} from 'lucide-react';
 import {useTheme} from 'next-themes';
+import dynamic from 'next/dynamic';
+import { ThemeProvider } from '@/components/ThemeProvider';
+const TopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
+  ssr: false,
+});
 
 export default function Home() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -26,6 +30,7 @@ export default function Home() {
   const isPastDate = date ? isPast(date) : false;
 
   return (
+    <ThemeProvider>
     <div className="container mx-auto p-4">
     
       <div className="flex items-center justify-between mb-4">
@@ -106,5 +111,6 @@ export default function Home() {
         )}
       </div>
     </div>
+    </ThemeProvider>
   );
 }
