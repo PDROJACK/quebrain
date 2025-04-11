@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { app } from '@/lib/firebase';
+import { firebaseApp as app } from '@/lib/firebase';
 
 export default function LogoutPage() {
   const router = useRouter();

@@ -1,11 +1,12 @@
 "use client";
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { firebaseApp as app } from '@/lib/firebase';
 import Link from 'next/link';
 
-const LoginPage = () => {
+const SignupPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,33 +14,22 @@ const LoginPage = () => {
 
   const auth = getAuth(app);
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       router.push('/');
     } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setError(null);
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.push('/');
-    } catch (err: any) {
-      setError(err.message);
+      setError((err as any).message);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form onSubmit={handleEmailLogin}>
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+        <form onSubmit={handleSignup}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
               Email
@@ -68,21 +58,15 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
           >
-            Login
+            Sign Up
           </button>
           {error && <p className="text-red-500 text-xs italic mt-2">{error}</p>}
         </form>
-        <button
-          onClick={handleGoogleLogin}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4"
-        >
-          Sign in with Google
-        </button>
         <div className="mt-4 text-center">
-          <Link href="/signup" className="text-blue-500 hover:text-blue-700">
-            No account? Sign up
+          <Link href="/login" className="text-blue-500 hover:text-blue-700">
+            Already have an account? Login
           </Link>
         </div>
       </div>
@@ -90,4 +74,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;
