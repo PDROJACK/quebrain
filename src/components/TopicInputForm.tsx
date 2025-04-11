@@ -8,9 +8,11 @@ import {PlusCircle} from 'lucide-react';
 
 interface TopicInputFormProps {
   selectedDate: Date | undefined;
+  setTopics: React.Dispatch<React.SetStateAction<string[]>>;
+  topics: string[];
 }
 
-export function TopicInputForm({selectedDate}: TopicInputFormProps) {
+export function TopicInputForm({selectedDate, setTopics, topics}: TopicInputFormProps) {
   const [topic, setTopic] = useState('');
   const {toast} = useToast();
 
@@ -24,6 +26,9 @@ export function TopicInputForm({selectedDate}: TopicInputFormProps) {
       });
       return;
     }
+
+    // update topic list
+    setTopics([...topics, topic])
 
     console.log('Topic:', topic, 'Date:', selectedDate);
 

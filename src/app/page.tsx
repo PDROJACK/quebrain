@@ -19,7 +19,7 @@ import React from 'react';
 import {signOut} from 'firebase/auth';
 import {firebaseAuth} from '@/lib/firebase';
 
-const TopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
+const DynamicTopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
   ssr: false,
 });
 
@@ -52,12 +52,11 @@ export default function Home() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const router = useRouter();
   const {theme, setTheme} = useTheme();
+  const [topics, setTopics] = useState<string[]>([]); // topics state
 
   const handleTopicClick = (topic: string) => {
     router.push(`/research/${topic}`);
   };
-
-  const topics = ['Topic 1', 'Topic 2', 'Topic 3'];
 
   const isFutureDate = date ? !isPast(date) && !isToday(date) : false;
   const isPastDate = date ? isPast(date) : false;
@@ -147,7 +146,8 @@ export default function Home() {
               {(isCurrentDate || (date && !isFutureDate)) && (
                 <div className="mb-4 border rounded-md p-4">
                   <React.Suspense fallback={<div>Loading...</div>}>
-                    <TopicInputForm selectedDate={date} />
+                  {/* Render DynamicTopicInputForm only when it's loaded */}
+                    <DynamicTopicInputForm selectedDate={date} setTopics={setTopics} topics={topics}/>
                   </React.Suspense>
                 </div>
               )}
