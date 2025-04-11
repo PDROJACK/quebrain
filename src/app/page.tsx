@@ -13,8 +13,8 @@ import dynamic from 'next/dynamic';
 import {ThemeProvider} from '@/components/ThemeProvider';
 import {useAuth} from '@/hooks/useAuth';
 import {Loader2} from 'lucide-react';
-import Sidebar from '@/components/Sidebar'; // Import Sidebar
-import {SidebarProvider} from '@/components/ui/sidebar'; // Import SidebarProvider
+import Sidebar from '@/components/Sidebar';
+import {SidebarProvider} from '@/components/ui/sidebar';
 
 const TopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
   ssr: false,
@@ -39,7 +39,7 @@ const AuthCheck = ({children}: {children: React.ReactNode}) => {
   }
 
   if (!user) {
-    return null; // AuthCheck handles the redirect, so don't render anything
+    return null;
   }
 
   return <>{children}</>;
@@ -54,7 +54,7 @@ export default function Home() {
     router.push(`/research/${topic}`);
   };
 
-  const topics = ['Topic 1', 'Topic 2', 'Topic 3']; // Example topics
+  const topics = ['Topic 1', 'Topic 2', 'Topic 3'];
 
   const isFutureDate = date ? !isPast(date) && !isToday(date) : false;
   const isPastDate = date ? isPast(date) : false;
@@ -64,7 +64,7 @@ export default function Home() {
       <ThemeProvider>
         <SidebarProvider>
           <div className="flex min-h-screen">
-            <Sidebar /> {/* Include Sidebar */}
+            <Sidebar />
             <div className="container mx-auto p-4 flex-grow">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-bold">Quebrain</h1>
@@ -82,7 +82,6 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Date Picker */}
               <div className="mb-4">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -108,14 +107,12 @@ export default function Home() {
                 </Popover>
               </div>
 
-              {/* Topic Input Form - Conditionally rendered */}
               {date && !isPastDate && (
                 <div className="mb-4 border rounded-md p-4">
                   <TopicInputForm selectedDate={date} />
                 </div>
               )}
 
-              {/* Topic List Display */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">
                   Topics for {date ? format(date, 'PPP') : 'Selected Date'}

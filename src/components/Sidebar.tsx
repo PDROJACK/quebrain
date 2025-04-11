@@ -1,47 +1,73 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuItem as SidebarItem } from '@/components/ui/sidebar';
-import { Home, Settings } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
+import {
+  Sidebar as Side,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenuItem as SidebarItem,
+} from '@/components/ui/sidebar';
+import {Home, Settings, ChevronLeft, ChevronRight, User} from 'lucide-react';
+import {useAuth} from '@/hooks/useAuth';
+import {useSidebar} from '@/components/ui/sidebar';
+import {cn} from '@/lib/utils';
 
 interface SidebarProps {
   topic?: string;
 }
 
-const CustomSidebar: React.FC<SidebarProps> = ({ topic }) => {
-  const { user } = useAuth();
-  const researchRoute = topic ? `/research/${topic}` : "/research"
+const CustomSidebar: React.FC<SidebarProps> = ({topic}) => {
+  const {user} = useAuth();
+  const {state, toggleSidebar} = useSidebar();
+  const researchRoute = topic ? `/research/${topic}` : '/research';
+  const isCollapsed = state === 'collapsed';
+
   return (
-    <Sidebar className="w-64" >
+    <Side
+      collapsible="icon"
+      className="w-64 group/sidebar-wrapper"
+      style={{width: isCollapsed ? 'calc(var(--sidebar-width-icon))' : 'var(--sidebar-width)'}}
+    >
       <SidebarContent>
-        <SidebarHeader>
-          <h2 className="text-lg font-semibold">Menu</h2>
+        <SidebarHeader className="flex items-center justify-between p-3">
+          <h2 className="text-lg font-semibold">Quebrain</h2>
+          <button onClick={toggleSidebar} className="focus:outline-none">
+            {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
+          </button>
         </SidebarHeader>
         <SidebarItem>
-            <Link href={researchRoute} className="flex items-center space-x-2">
-             <Home />
-             <span>Research</span>
-            </Link>
+          <Link href={researchRoute} className="flex items-center space-x-2">
+            <Home className="lucide-react" />
+            {!isCollapsed && <span>Research</span>}
+          </Link>
         </SidebarItem>
         <SidebarItem>
           <Link href="/settings" className="flex items-center space-x-2">
-            <Settings />
-            <span>Settings</span>
+            <Settings className="lucide-react" />
+            {!isCollapsed && <span>Settings</span>}
           </Link>
         </SidebarItem>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="p-3">
         <Link href="/logout" className="w-full">
-        <div className="flex items-center justify-center">
-          <Avatar>
-            <AvatarImage src={user?.photoURL || ""} alt={user?.displayName || "User"} />
-            <AvatarFallback>{user?.displayName?.slice(0,2) || "UN"}</AvatarFallback>
-          </Avatar>
-        </div>
+          <div className="flex items-center justify-center">
+            <Avatar className="cursor-pointer">
+              <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'} />
+              <AvatarFallback>{user?.displayName?.slice(0, 2) || 'UN'}</AvatarFallback>
+            </Avatar>
+            {!isCollapsed && (
+              <div className="ml-2">
+                <p className="text-sm">{user?.displayName || 'User'}</p>
+                <p className="text-xs text-muted-foreground">{user?.email || 'No Email'}</p>
+              </div>
+            )}
+          </div>
         </Link>
       </SidebarFooter>
-    </Sidebar>
+    </Side>
   );
 };
 
