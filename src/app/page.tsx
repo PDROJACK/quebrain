@@ -27,8 +27,9 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
+    
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Quebrain - AI Research Tool</h1>
+        <h1 className="text-2xl font-bold">Quebrain</h1>
         <Button
           variant="outline"
           size="icon"
