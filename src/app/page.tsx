@@ -12,10 +12,12 @@ import {useTheme} from 'next-themes';
 import dynamic from 'next/dynamic';
 import {ThemeProvider} from '@/components/ThemeProvider';
 import {useAuth} from '@/hooks/useAuth';
-import {Loader2} from 'lucide-react';
+import {Loader2, PanelLeft, LogOut} from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import {SidebarProvider} from '@/components/ui/sidebar';
 import React from 'react';
+import {signOut} from 'firebase/auth';
+import {firebaseAuth} from '@/lib/firebase';
 
 const TopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
   ssr: false,
@@ -60,27 +62,61 @@ export default function Home() {
   const isFutureDate = date ? !isPast(date) && !isToday(date) : false;
   const isPastDate = date ? isPast(date) : false;
 
+  const isCurrentDate = date ? isToday(date) : false; // Check if the selected date is today
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(firebaseAuth);
+      router.push('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+
   return (
     <AuthCheck>
       <ThemeProvider>
         <SidebarProvider>
-          <div className="flex min-h-screen">
+          <div className="flex min-h-svh">
             <Sidebar />
-            <div className="flex-grow p-4">
+            <div className="flex-1 p-4 mr-1">
+              
               <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold">Quebrain</h1>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                >
-                  {theme === 'dark' ? (
-                    <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 transition-all dark:-rotate-90" />
-                  ) : (
-                    <MoonIcon className="h-[1.2rem] w-[1.2rem] rotate-90 transition-all dark:rotate-0" />
-                  )}
-                  <span className="sr-only">Toggle theme</span>
-                </Button>
+                <div className="flex flex-row gap-4 items-center">
+                  <PanelLeft className='hidden md:block h-6 w-6'/>
+                  <h1 className="text-2xl font-bold">Quebrain</h1>
+                </div>
+                <div className='flex'>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline">Menu</Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="end">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                      >
+                        {theme === 'dark' ? (
+                          <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 transition-all dark:-rotate-90" />
+                        ) : (
+                          <MoonIcon className="h-[1.2rem] w-[1.2rem] rotate-90 transition-all dark:rotate-0" />
+                        )}
+                        <span className="sr-only">Toggle theme</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleSignOut}
+                        className="mt-2 w-full justify-start"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </Button>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
 
               <div className="mb-4">
@@ -108,7 +144,7 @@ export default function Home() {
                 </Popover>
               </div>
 
-              {date && !isPastDate && (
+              {(isCurrentDate || (date && !isFutureDate)) && (
                 <div className="mb-4 border rounded-md p-4">
                   <React.Suspense fallback={<div>Loading...</div>}>
                     <TopicInputForm selectedDate={date} />
@@ -143,6 +179,7 @@ export default function Home() {
                   </p>
                 )}
               </div>
+
             </div>
           </div>
         </SidebarProvider>
