@@ -17,10 +17,11 @@ import {SidebarProvider} from '@/components/ui/sidebar';
 import React from 'react';
 import {signOut} from 'firebase/auth';
 import {firebaseAuth} from '@/lib/firebase';
+import { TopicInputForm } from '@/components/TopicInputForm';
 
-const DynamicTopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
-  ssr: false,
-});
+// const DynamicTopicInputForm = dynamic(() => import('@/components/TopicInputForm'), {
+//   ssr: false,
+// });
 
 const AuthCheck = ({children}: {children: React.ReactNode}) => {
   const {user, loading} = useAuth();
@@ -87,9 +88,7 @@ export default function Home() {
 
   return (
     <AuthCheck>
-      <SidebarProvider>
         <div className="flex min-h-svh">
-          <Sidebar />
           <div className="flex-1 p-4 mr-1">
             
             <div className="flex items-center justify-between mb-4">
@@ -157,7 +156,7 @@ export default function Home() {
             {(isCurrentDate || (date && !isFutureDate)) && (
               <div className="mb-4 border rounded-md p-4">
                 {/* Render DynamicTopicInputForm only when it's loaded */}
-                 <DynamicTopicInputForm selectedDate={date} setTopics={setTopics} topics={topics}/>
+                  <TopicInputForm selectedDate={date} setTopics={setTopics} topics={topics} />
               </div>
             )}
 
@@ -177,11 +176,6 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              {isPastDate && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  Adding topics for past dates is not allowed.
-                </p>
-              )}
               {isFutureDate && (
                 <p className="text-sm text-muted-foreground mt-2">
                   Please select current or past date
@@ -191,7 +185,6 @@ export default function Home() {
 
           </div>
         </div>
-      </SidebarProvider>
     </AuthCheck>
   );
 }

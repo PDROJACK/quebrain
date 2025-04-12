@@ -42,9 +42,6 @@ export function TopicInputForm({selectedDate, setTopics, topics}: TopicInputForm
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="topic" className="block text-sm font-medium text-gray-700">
-          Topic:
-        </label>
         <Input
           type="text"
           id="topic"

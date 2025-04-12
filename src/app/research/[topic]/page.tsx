@@ -35,9 +35,7 @@ export default function ResearchPage({params}: ResearchPageProps) {
 
   return (
     
-      <SidebarProvider> {/* Wrap with SidebarProvider */}
         <div className="flex min-h-screen">
-          <Sidebar topic={topic} />
           <div className="container mx-auto p-4 flex-grow">
             <h1 className="text-2xl font-bold mb-4">Research Results for {topic}</h1>
             <p className="mb-4">{researchResults.summary}</p>
@@ -59,7 +57,6 @@ export default function ResearchPage({params}: ResearchPageProps) {
             </ul>
           </div>
         </div>
-      </SidebarProvider>
     
   );
 }
