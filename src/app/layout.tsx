@@ -5,6 +5,7 @@ import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from '@/components/ui/toaster';
 import {ThemeProvider} from '@/components/ThemeProvider';
+import {useEffect, useState} from 'react';
 
 import {metadata} from './metadata';
 
@@ -34,4 +35,3 @@ export default function RootLayout({
     </html>
   );
 }
-
