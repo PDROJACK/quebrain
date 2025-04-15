@@ -10,7 +10,17 @@ import {
   SidebarHeader,
   SidebarMenuItem as SidebarItem,
 } from '@/components/ui/sidebar';
-import {Home, Settings, ChevronLeft, ChevronRight, User} from 'lucide-react';
+import {
+  Home,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Users,
+  FileText,
+
+  Puzzle,
+} from 'lucide-react';
 import {useAuth} from '@/hooks/useAuth';
 import {useSidebar} from '@/components/ui/sidebar';
 import {cn} from '@/lib/utils';
@@ -32,21 +42,37 @@ const CustomSidebar: React.FC<SidebarProps> = ({topic}) => {
       style={{width: isCollapsed ? 'calc(var(--sidebar-width-icon))' : 'var(--sidebar-width)'}}
     >
       <SidebarContent className="p-0">
-        <SidebarHeader className="flex flex-row items-center justify-between p-3">
+        <SidebarHeader className="flex flex-row items-center pl-3">
           <button onClick={toggleSidebar} className="focus:outline-none">
             {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
           </button>
-          {isCollapsed ? null : <h2 className="text-lg font-semibold">Quebrain</h2> }
-          
+          {!isCollapsed && (
+            <h2 className="text-lg font-semibold ml-3 flex-grow">Quebrain</h2>
+          )}
         </SidebarHeader>
-        <SidebarItem>
-          <Link href={researchRoute} className="flex items-center justify-center space-x-2">
+        <SidebarItem className="flex items-center space-x-2 justify-start">
+          <Link href="/" className="flex items-center space-x-2">
             <Home className="lucide-react" />
             {!isCollapsed && <span>Research</span>}
           </Link>
         </SidebarItem>
-        <SidebarItem className="p-2">
-          <Link href="/settings" className="flex items-center justify-center space-x-2">
+          <SidebarItem className="flex items-center space-x-2 justify-start">
+          <Link href="/content" className="flex items-center space-x-2">
+            <FileText className="lucide-react" />
+            {!isCollapsed && <span>Content</span>}
+          </Link>
+        </SidebarItem>
+
+
+        <SidebarItem className="flex items-center space-x-2 justify-start">
+          <Link href="/integrations" className="flex items-center space-x-2">
+            <Puzzle className="lucide-react" />
+            {!isCollapsed && <span>Integrations</span>}
+          </Link>
+        </SidebarItem>
+
+        <SidebarItem className="flex items-center space-x-2 justify-start">
+          <Link href="/settings" className="flex items-center space-x-2">
             <Settings className="lucide-react" />
             {!isCollapsed && <span>Settings</span>}
           </Link>
