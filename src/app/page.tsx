@@ -11,9 +11,10 @@ import {useRouter} from 'next/navigation';
 import {Settings, LogOut, User} from 'lucide-react';
 import {useAuth} from '@/hooks/useAuth';
 import {Avatar, AvatarImage, AvatarFallback} from '@/components/ui/avatar';
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {useEffect} from 'react';
 import AuthCheck from '@/components/AuthCheck';
+import CustomSidebar from '@/components/Sidebar';
 
 export default function Home() {
   const [date, setDate] = useState<Date>();
@@ -46,6 +47,7 @@ export default function Home() {
   return (
     <AuthCheck>
       <div className="flex min-h-screen">
+        <CustomSidebar />
         <div className="container mx-auto p-4 flex-grow">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold">Quebrain</h1>
