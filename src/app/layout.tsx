@@ -12,6 +12,7 @@ import {useAuth} from '@/hooks/useAuth';
 import {useRouter} from 'next/navigation';
 
 import {metadata} from './metadata';
+import CustomSidebar from '@/components/Sidebar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,6 +43,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SidebarProvider>
+            <CustomSidebar />
+
             {loading ? (
               <div>Loading...</div>
             ) : user ? (

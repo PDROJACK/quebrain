@@ -71,7 +71,7 @@ const ResearchResultsDisplay: React.FC<ResearchResultsDisplayProps> = ({ topic }
 
   return (
     <div className="mx-auto p-4 flex flex-col items-center w-full max-w-3xl">
-      <div className="w-full mb-4">
+      {/* <div className="w-full mb-4">
         <div
           className={`flex items-center rounded-md border border-gray-300 ${
             isInputFocused ? "ring-2 ring-blue-500" : ""
@@ -100,7 +100,7 @@ const ResearchResultsDisplay: React.FC<ResearchResultsDisplayProps> = ({ topic }
             Maximum {maxInputLength} characters allowed.
           </p>
         )}
-      </div>
+      </div> */}
 
       <Card className="w-full bg-white shadow-md rounded-lg overflow-hidden">
         <CardContent className="p-4 w-full">

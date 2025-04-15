@@ -20,8 +20,7 @@ export default function ResearchPage({params}: ResearchPageProps) {
   return (
     <div className="flex min-h-screen">
       <div className="container mx-auto p-4 flex-grow">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Research: {topic}</h1>
+        <div className="flex mx-auto p-2 items-center">
           <Button onClick={handleCreateContent}>Create Content</Button>
         </div>
         <ResearchResultsDisplay topic={"test"} />

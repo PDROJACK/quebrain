@@ -44,9 +44,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <CustomSidebar />
-      <div className="container mx-auto p-4 flex-grow">
+      <div className="container w-full mx-auto p-4 flex-col h-full">
         <div className="flex justify-end items-center mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -135,6 +133,5 @@ export default function Home() {
           )}
         </div>
       </div>
-    </div>
   );
 }
