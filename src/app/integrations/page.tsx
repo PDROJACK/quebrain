@@ -31,7 +31,7 @@ const IntegrationsPage = () => {
       <h1 className="text-2xl font-bold mb-4">Social Media Integrations</h1>
 
       {/* Integration Setup Section */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col gap-4">
         {socialButtons.map((social, index) => (
           <div key={index} className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">{social.name}</h2>
