@@ -6,6 +6,10 @@ import './globals.css';
 import {Toaster} from '@/components/ui/toaster';
 import {ThemeProvider} from '@/components/ThemeProvider';
 import {useEffect, useState} from 'react';
+import {SidebarProvider} from '@/components/ui/sidebar';
+import AuthCheck from '@/components/AuthCheck';
+import {useAuth} from '@/hooks/useAuth';
+import {useRouter} from 'next/navigation';
 
 import {metadata} from './metadata';
 
@@ -24,15 +28,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const {user, loading} = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <SidebarProvider>
+            {loading ? (
+              <div>Loading...</div>
+            ) : user ? (
+              <AuthCheck>{children}</AuthCheck>
+            ) : (
+              children
+            )}
+          </SidebarProvider>
           <Toaster />
         </ThemeProvider>
       </body>
     </html>
   );
 }
-

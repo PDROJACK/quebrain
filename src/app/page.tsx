@@ -45,7 +45,7 @@ export default function Home() {
   }
 
   return (
-    <AuthCheck>
+    
       <div className="flex min-h-screen">
         <CustomSidebar />
         <div className="container mx-auto p-4 flex-grow">
@@ -118,6 +118,7 @@ export default function Home() {
             </div>
           )}
 
+          {/* Topic List Display */}
           <div>
             <h2 className="text-xl font-semibold mb-2">
               Topics for {date ? format(date, 'PPP') : 'Selected Date'}
@@ -140,6 +141,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </AuthCheck>
+    
   );
 }
