@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Button} from '@/components/ui/button';
-import {LinkedIn, Twitter, Instagram} from 'lucide-react';
+import {Linkedin, Twitter, Instagram} from 'lucide-react';
 
 const IntegrationsPage = () => {
   return (
@@ -13,7 +13,7 @@ const IntegrationsPage = () => {
       {/* Example Integration Setup Section (Replace with actual integration logic) */}
       <section className="mb-4">
         <h2 className="text-xl font-semibold mb-2 flex items-center">
-          <LinkedIn className="mr-2" />
+          <Linkedin className="mr-2" />
           LinkedIn Integration
         </h2>
         <p>Connect to LinkedIn to publish posts directly.</p>
