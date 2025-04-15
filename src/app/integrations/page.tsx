@@ -46,7 +46,7 @@ const IntegrationsPage = () => {
             <h2 className="text-xl font-semibold mb-2 flex items-center">
               {social.name} Integration
             </h2>
-            <p>Connect to {social.name} to publish posts directly.</p>
+            
             <Button
               onClick={social.handler}
               className={cn(
