@@ -4,22 +4,21 @@ import {Calendar} from '@/components/ui/calendar';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {Button} from '@/components/ui/button';
 import {cn} from '@/lib/utils';
-import {format} from 'date-fns';
-import {useState} from 'react';
+import {format, startOfToday} from 'date-fns';
+import {useState, useEffect} from 'react';
 import {TopicInputForm} from '@/components/TopicInputForm';
 import {useRouter} from 'next/navigation';
 import {Settings, LogOut, User} from 'lucide-react';
 import {useAuth} from '@/hooks/useAuth';
 import {Avatar, AvatarImage, AvatarFallback} from '@/components/ui/avatar';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
-import {useEffect} from 'react';
-import CustomSidebar from '@/components/Sidebar';
+import {fetchTopics, addTopic} from '@/lib/api';
 
 export default function Home() {
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(startOfToday());
   const [topics, setTopics] = useState<string[]>([]);
   const router = useRouter();
-  const {user, loading, signOut} = useAuth();
+  const {user, loading, signOut, token} = useAuth();
 
   const isCurrentDate = date ? format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') : false;
   const isFutureDate = date ? date > new Date() : false;
@@ -38,9 +37,38 @@ export default function Home() {
       router.push('/login');
     }
   }, [user, loading, router]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!date || !token) return;
+      try {
+        const formattedDate = format(date, 'yyyy-MM-dd');
+        const fetchedTopics = await fetchTopics(formattedDate, token);
+        setTopics(fetchedTopics);
+      } catch (error) {
+        console.error('Failed to fetch topics:', error);
+      }
+    };
+
+    fetchData();
+  }, [date, token]);
+
+  const handleAddTopic = async (topic: string) => {
+    if (!date || !token) {
+      console.error('Date or token is missing');
+      return;
+    }
+    try {
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      await addTopic(formattedDate, topic, token);
+      await fetchTopics(formattedDate, token).then(setTopics);
+    } catch (error) {
+      console.error('Failed to add topic:', error);
+    }
+  };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='flex justify-center items-center h-screen'>Loading...</div>;
   }
 
   return (
@@ -88,7 +116,7 @@ export default function Home() {
                 className={cn(
                   'w-full justify-start text-left font-normal',
                   !date && 'text-muted-foreground'
-                )}
+                )}>
               >
                 {date ? format(date, 'PPP') : <span>Pick a date</span>}
               </Button>
@@ -107,7 +135,7 @@ export default function Home() {
 
         {(isCurrentDate || (date && !isFutureDate)) && (
           <div className="mb-4 border rounded-md p-4">
-            <TopicInputForm selectedDate={date} setTopics={setTopics} topics={topics} />
+            <TopicInputForm selectedDate={date} topics={topics} onAddTopic={handleAddTopic} />
           </div>
         )}
 
@@ -135,3 +163,4 @@ export default function Home() {
       </div>
   );
 }
+

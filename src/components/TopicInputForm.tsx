@@ -1,9 +1,10 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {useToast} from '@/hooks/use-toast';
+import {addTopic} from '@/lib/api';
 import {PlusCircle} from 'lucide-react';
 
 interface TopicInputFormProps {
@@ -27,16 +28,23 @@ export function TopicInputForm({selectedDate, setTopics, topics}: TopicInputForm
       return;
     }
 
-    // update topic list
-    setTopics([...topics, topic])
+    try {
+        await addTopic(topic, selectedDate!);
 
-    console.log('Topic:', topic, 'Date:', selectedDate);
+        toast({
+            title: 'Success',
+            description: `Topic "${topic}" submitted for research.`,
+        });
 
-    toast({
-      title: 'Success',
-      description: `Topic "${topic}" submitted for research.`,
-    });
-    setTopic('');
+        setTopic('');
+        setTopics([...topics, topic])
+    } catch (error:any) {
+        toast({
+            title: 'Error',
+            description: error.message || 'Failed to add topic.',
+            variant: 'destructive',
+        });
+    }
   };
 
   return (
