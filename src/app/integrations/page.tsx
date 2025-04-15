@@ -7,9 +7,6 @@ import {
   Instagram,
 } from 'lucide-react';
 import {cn} from '@/lib/utils';
-import {
-  X
-} from 'lucide-react';
 
 const IntegrationsPage = () => {
   const socialButtons = [
@@ -18,13 +15,6 @@ const IntegrationsPage = () => {
       icon: Linkedin,
       handler: () => {
         alert('Connect to LinkedIn');
-      },
-    },
-    {
-      name: 'X',
-      icon: X,
-      handler: () => {
-        alert('Connect to X');
       },
     },
     {
