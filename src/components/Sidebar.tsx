@@ -32,13 +32,14 @@ const CustomSidebar: React.FC<SidebarProps> = ({topic}) => {
       style={{width: isCollapsed ? 'calc(var(--sidebar-width-icon))' : 'var(--sidebar-width)'}}
     >
       <SidebarContent className="p-0">
-        <SidebarHeader className="flex items-center justify-between p-3">
-          <h2 className="text-lg font-semibold">Quebrain</h2>
+        <SidebarHeader className="flex flex-row items-center justify-between p-3">
           <button onClick={toggleSidebar} className="focus:outline-none">
             {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
           </button>
+          {isCollapsed ? null : <h2 className="text-lg font-semibold">Quebrain</h2> }
+          
         </SidebarHeader>
-        <SidebarItem className="p-2">
+        <SidebarItem>
           <Link href={researchRoute} className="flex items-center justify-center space-x-2">
             <Home className="lucide-react" />
             {!isCollapsed && <span>Research</span>}
