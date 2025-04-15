@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {Button} from '@/components/ui/button';
+import {LinkedIn, Twitter, Instagram} from 'lucide-react';
 
 const IntegrationsPage = () => {
   return (
@@ -11,15 +12,30 @@ const IntegrationsPage = () => {
 
       {/* Example Integration Setup Section (Replace with actual integration logic) */}
       <section className="mb-4">
-        <h2 className="text-xl font-semibold mb-2">LinkedIn Integration</h2>
+        <h2 className="text-xl font-semibold mb-2 flex items-center">
+          <LinkedIn className="mr-2" />
+          LinkedIn Integration
+        </h2>
         <p>Connect to LinkedIn to publish posts directly.</p>
         <Button>Connect LinkedIn</Button>
       </section>
 
       <section className="mb-4">
-        <h2 className="text-xl font-semibold mb-2">Twitter Integration</h2>
+        <h2 className="text-xl font-semibold mb-2 flex items-center">
+          <Twitter className="mr-2" />
+          Twitter Integration
+        </h2>
         <p>Connect to Twitter to publish tweets directly.</p>
         <Button>Connect Twitter</Button>
+      </section>
+
+      <section className="mb-4">
+        <h2 className="text-xl font-semibold mb-2 flex items-center">
+          <Instagram className="mr-2" />
+          Instagram Integration
+        </h2>
+        <p>Connect to Instagram to publish posts directly.</p>
+        <Button>Connect Instagram</Button>
       </section>
     </div>
   );
