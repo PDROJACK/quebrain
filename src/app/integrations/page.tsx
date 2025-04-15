@@ -4,7 +4,6 @@ import React from 'react';
 import {Button} from '@/components/ui/button';
 import {
   Linkedin,
-  Twitter,
   Instagram,
 } from 'lucide-react'; // Corrected icon names
 import {cn} from '@/lib/utils';
@@ -41,7 +40,7 @@ const IntegrationsPage = () => {
       <p>Connect your social media accounts to automate content publishing.</p>
 
       {/* Integration Setup Section */}
-      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {socialButtons.map((social, index) => (
           <section key={index} className="mb-4">
             <h2 className="text-xl font-semibold mb-2 flex items-center">
