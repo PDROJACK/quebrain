@@ -8,6 +8,7 @@ import {
   Instagram,
 } from 'lucide-react'; // Corrected icon names
 import {cn} from '@/lib/utils';
+import {X} from 'lucide-react';
 
 const IntegrationsPage = () => {
   const socialButtons = [
@@ -19,10 +20,10 @@ const IntegrationsPage = () => {
       },
     },
     {
-      name: 'Twitter',
-      icon: Twitter,
+      name: 'X',
+      icon: X,
       handler: () => {
-        alert('Connect to Twitter');
+        alert('Connect to X');
       },
     },
     {
