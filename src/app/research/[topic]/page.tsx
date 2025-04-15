@@ -24,7 +24,7 @@ export default function ResearchPage({params}: ResearchPageProps) {
           <h1 className="text-2xl font-bold">Research: {topic}</h1>
           <Button onClick={handleCreateContent}>Create Content</Button>
         </div>
-        <ResearchResultsDisplay topic={topic} />
+        <ResearchResultsDisplay topic={"test"} />
       </div>
     </div>
   );

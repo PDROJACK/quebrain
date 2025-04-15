@@ -1,25 +1,37 @@
 'use client';
 
-import {useState, useEffect} from 'react';
 import {Calendar} from '@/components/ui/calendar';
-import {Button} from '@/components/ui/button';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
+import {Button} from '@/components/ui/button';
 import {cn} from '@/lib/utils';
-import {format, isPast, isToday} from 'date-fns';
-import {useRouter} from 'next/navigation';
-import {SunIcon, MoonIcon} from 'lucide-react';
-import {useTheme} from 'next-themes';
-import {useAuth} from '@/hooks/useAuth';
-import {Loader2, PanelLeft, LogOut, Settings} from 'lucide-react';
-import Sidebar from '@/components/Sidebar';
-import React from 'react';
-import {signOut} from 'firebase/auth';
-import {firebaseAuth} from '@/lib/firebase';
+import {format} from 'date-fns';
+import {useState} from 'react';
 import {TopicInputForm} from '@/components/TopicInputForm';
+import {useRouter} from 'next/navigation';
+import {Settings, LogOut, User} from 'lucide-react';
+import {useAuth} from '@/hooks/useAuth';
+import {Avatar, AvatarImage, AvatarFallback} from '@/components/ui/avatar';
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
+import {useEffect} from 'react';
+import AuthCheck from '@/components/AuthCheck';
 
-const AuthCheck = ({children}: {children: React.ReactNode}) => {
-  const {user, loading} = useAuth();
+export default function Home() {
+  const [date, setDate] = useState<Date>();
+  const [topics, setTopics] = useState<string[]>([]);
   const router = useRouter();
+  const {user, loading, signOut} = useAuth();
+
+  const isCurrentDate = date ? format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') : false;
+  const isFutureDate = date ? date > new Date() : false;
+
+  const handleTopicClick = (topic: string) => {
+    router.push(`/research/${topic}`);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/login');
+  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -28,104 +40,48 @@ const AuthCheck = ({children}: {children: React.ReactNode}) => {
   }, [user, loading, router]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="animate-spin h-6 w-6" />
-      </div>
-    );
+    return <div>Loading...</div>;
   }
-
-  if (!user) {
-    return null;
-  }
-
-  return <>{children}</>;
-};
-
-export default function Home() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const router = useRouter();
-  const {theme, setTheme} = useTheme();
-  const [topics, setTopics] = useState<string[]>([]); // topics state
-
-  const handleTopicClick = (topic: string) => {
-    router.push(`/research/${topic}`);
-  };
-
-  const isFutureDate = date ? !isPast(date) && !isToday(date) : false;
-
-  const isCurrentDate = date ? isToday(date) : false; // Check if the selected date is today
-  const isPastDate = date ? isPast(date) : date && isPast(date);
-  const handleSignOut = async () => {
-    try {
-      await signOut(firebaseAuth);
-      router.push('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-  useEffect(() => {
-    // Load topics from localStorage on mount
-    const storedTopics = localStorage.getItem(date ? format(date, 'yyyy-MM-dd') : 'default');
-    if (storedTopics) {
-      setTopics(JSON.parse(storedTopics));
-    }
-  }, [date]);
-
-  useEffect(() => {
-    // Save topics to localStorage whenever topics or date changes
-    if (date) {
-      localStorage.setItem(format(date, 'yyyy-MM-dd'), JSON.stringify(topics));
-    }
-  }, [topics, date]);
 
   return (
     <AuthCheck>
-      <div className="flex min-h-svh">
-        <div className="flex-1 p-4 mr-1">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex flex-row gap-4 items-center">
-              <PanelLeft className="hidden md:block h-6 w-6" />
-              <h1 className="text-2xl font-bold">Quebrain</h1>
-            </div>
-            <div className="flex">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">Menu</Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  >
-                    {theme === 'dark' ? (
-                      <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 transition-all dark:-rotate-90" />
-                    ) : (
-                      <MoonIcon className="h-[1.2rem] w-[1.2rem] rotate-90 transition-all dark:rotate-0" />
-                    )}
-                    <span className="sr-only">Toggle theme</span>
+      <div className="flex min-h-screen">
+        <div className="container mx-auto p-4 flex-grow">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Quebrain</h1>
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'User'} />
+                      <AvatarFallback>{user?.displayName?.slice(0, 2) || 'UN'}</AvatarFallback>
+                    </Avatar>
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => router.push('/settings')}
-                    className="mt-2 w-full justify-start"
-                  >
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuItem disabled>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>
+                      {user?.displayName}
+                      <br />
+                      {user?.email}
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/settings')}>
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleSignOut}
-                    className="mt-2 w-full justify-start"
-                  >
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/integrations')}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Integrations
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign Out
-                  </Button>
-                </PopoverContent>
-              </Popover>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
@@ -176,7 +132,7 @@ export default function Home() {
             </ul>
             {isFutureDate && (
               <p className="text-sm text-muted-foreground mt-2">
-                Please select current or past date
+                Adding topics for past dates is not allowed.
               </p>
             )}
           </div>
