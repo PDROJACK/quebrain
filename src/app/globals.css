@@ -1,40 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  :root {
+    --font-inter: Inter, sans-serif;
+    --font-roboto: Roboto, sans-serif;
+    --font-open-sans: "Open Sans", sans-serif;
+    --font-system: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-sans: var(--font-system);
 
-.text-main-heading {
-  font-size: 1.4em; /* 20px */
-  line-height: 1.5;
-  @media (min-width: 320px) and (max-width: 768px) {
-    font-size: clamp(1.4em, 3vw, 1.6em);
-    line-height: 1.5;
+    --text-main-heading: clamp(1.4em, 3vw, 1.6em);
+    --text-subheading: clamp(1.2em, 2.5vw, 1.4em);
+    --text-body: clamp(1em, 1.5vw, 1.4em);
+    --text-secondary: clamp(0.875em, 1.3vw, 1.1em);
+    --line-height-base: 1.5;
+    --line-height-heading: 1.2;
   }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    font-size: clamp(1.6em, 2.5vw, 1.8em);
-    line-height: 1.5;
-  }
-  @media (min-width: 1024px) {
-    font-size: clamp(1.8em, 2.2vw, 2em);
-    line-height: 1.4;
-  }
-}
-.text-subheading {
-  font-size: 1.2em; /* 18px */
-  @media (min-width: 320px) and (max-width: 768px) {
-    font-size: clamp(1.2em, 2.5vw, 1.4em); /* 18px to 20px */
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    font-size: clamp(1.4em, 2vw, 1.6em); /* 20px to 22px */
-  }
-  @media (min-width: 1024px) {
-    font-size: clamp(1.6em, 2vw, 1.8em); /* 24px to 26px */
-  }
-}
-.text-body {
-  font-size: clamp(1em, 1.5vw, 1.4em);
-}
-.text-secondary {
-  font-size: clamp(0.875em, 1.3vw, 1.1em);
 }
 
 @layer base {
@@ -113,9 +96,46 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
-    font-family: 'sans-serif';
+    font-family: var(--font-sans);
+    line-height: var(--line-height-base);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    line-height: var(--line-height-heading);
+    font-family: var(--font-sans);
+  }
+
+  h1 {
+    @apply text-3xl sm:text-4xl md:text-5xl;
+    font-size: var(--text-main-heading);
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl md:text-4xl;
+    font-size: var(--text-subheading);
+  }
+
+  p,
+  li,
+  span,
+  label,
+  div {
+    font-size: var(--text-body);
+    line-height: var(--line-height-base);
+  }
+
+  small {
+    font-size: var(--text-secondary);
+    line-height: var(--line-height-base);
   }
 }
 

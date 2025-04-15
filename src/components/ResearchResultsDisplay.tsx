@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
+const maxInputLength = 200;
 interface ResearchResultsDisplayProps {
   topic: string;
 }
@@ -10,12 +12,14 @@ interface ResearchResultsDisplayProps {
 const ResearchResultsDisplay: React.FC<ResearchResultsDisplayProps> = ({ topic }) => {
   const [markdownContent, setMarkdownContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  const [suggestion, setSuggestion] = useState<string>("");
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const loadMarkdown = async () => {
       setMarkdownContent(null);
       setError(null);
-      try {
+       try {
         const response = await fetch(`/${topic}.md`);
         if (response.ok) {
           const content = await response.text();
@@ -26,7 +30,7 @@ const ResearchResultsDisplay: React.FC<ResearchResultsDisplayProps> = ({ topic }
       } catch (error) {
         console.error("Error loading markdown:", error);
         setError(`Failed to load research data for topic: ${topic}. ${error.message}`);
-        
+
       }
     };
     loadMarkdown();
@@ -66,19 +70,52 @@ const ResearchResultsDisplay: React.FC<ResearchResultsDisplayProps> = ({ topic }
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-3xl">
-      <Card className="bg-white shadow-md rounded-lg overflow-hidden">
-        <CardContent className="p-4">
-          {error && <div className="text-red-500">{error}</div>}
+    <div className="mx-auto p-4 flex flex-col items-center w-full max-w-3xl">
+      <div className="w-full mb-4">
+        <div
+          className={`flex items-center rounded-md border border-gray-300 ${
+            isInputFocused ? "ring-2 ring-blue-500" : ""
+          }`}
+        >
+          <Input
+            type="text"
+            placeholder="Suggest edits to the AI..."
+            value={suggestion}
+            maxLength={maxInputLength}
+            onChange={(e) => setSuggestion(e.target.value)}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+            ref={inputRef}
+            className="flex-grow border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+          <Button
+            disabled={suggestion.trim() === ""}
+            className="ml-2 rounded-md"
+          >
+            Send
+          </Button>
+        </div>
+        {suggestion.length >= maxInputLength && (
+          <p className="text-red-500 text-xs mt-1">
+            Maximum {maxInputLength} characters allowed.
+          </p>
+        )}
+      </div>
+
+      <Card className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <CardContent className="p-4 w-full">
+          {error && <div className="text-red-500 w-full">{error}</div>}
           {markdownContent ? (
-            <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-full">
-              <ReactMarkdown  components={markdownComponents}>{markdownContent}</ReactMarkdown>
+            <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-full w-full">
+              <ReactMarkdown components={markdownComponents}>{markdownContent}</ReactMarkdown>
             </div>
-          ) : !error && <div className="animate-pulse">Loading..</div>}
+          ) : !error && (
+            <div className="animate-pulse">Loading..</div>
+          )}
 
         </CardContent>
       </Card>
-    </div>
+    </div >
   );
 };
 

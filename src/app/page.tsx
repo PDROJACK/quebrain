@@ -82,7 +82,6 @@ export default function Home() {
   return (
     <AuthCheck>
       <div className="flex min-h-svh">
-        <Sidebar />
         <div className="flex-1 p-4 mr-1">
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-row gap-4 items-center">
