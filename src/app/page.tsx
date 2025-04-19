@@ -9,16 +9,18 @@ import {useState, useEffect} from 'react';
 import {TopicInputForm} from '@/components/TopicInputForm';
 import {useRouter} from 'next/navigation';
 import {Settings, LogOut, User} from 'lucide-react';
-import {useAuth} from '@/hooks/useAuth';
+import {useAuth, useSignOut} from '@/hooks/useAuth';
 import {Avatar, AvatarImage, AvatarFallback} from '@/components/ui/avatar';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {fetchTopics, addTopic} from '@/lib/api';
+import { firebaseAuth as auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 
 export default function Home() {
   const [date, setDate] = useState<Date>(startOfToday());
   const [topics, setTopics] = useState<string[]>([]);
   const router = useRouter();
-  const {user, loading, signOut, token} = useAuth();
+  const {user, loading, token} = useAuth();
 
   const isCurrentDate = date ? format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') : false;
   const isFutureDate = date ? date > new Date() : false;
@@ -28,7 +30,7 @@ export default function Home() {
   };
 
   const handleSignOut = async () => {
-    await signOut();
+    await signOut(auth);
     router.push('/login');
   };
 
@@ -39,12 +41,13 @@ export default function Home() {
   }, [user, loading, router]);
   
   useEffect(() => {
+    
     const fetchData = async () => {
       if (!date || !token) return;
       try {
         const formattedDate = format(date, 'yyyy-MM-dd');
-        const fetchedTopics = await fetchTopics(formattedDate, token);
-        setTopics(fetchedTopics);
+        const fetchedTopics = await fetchTopics(formattedDate, user?.getIdToken());
+        setTopics(fetchedTopics);        
       } catch (error) {
         console.error('Failed to fetch topics:', error);
       }
@@ -61,7 +64,9 @@ export default function Home() {
     try {
       const formattedDate = format(date, 'yyyy-MM-dd');
       await addTopic(formattedDate, topic, token);
-      await fetchTopics(formattedDate, token).then(setTopics);
+      console.log("1 "+ user?.getIdToken())
+      const updatedTopics = await fetchTopics(formattedDate, user?.getIdToken());
+      setTopics(updatedTopics);
     } catch (error) {
       console.error('Failed to add topic:', error);
     }
@@ -89,7 +94,6 @@ export default function Home() {
                 <span>
                   {user?.displayName}
                   <br />
-                  {user?.email}
                 </span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push('/settings')}>
@@ -163,4 +167,3 @@ export default function Home() {
       </div>
   );
 }
-

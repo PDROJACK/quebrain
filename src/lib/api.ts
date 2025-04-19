@@ -1,21 +1,20 @@
-import { useAuth } from '@/hooks/useAuth';
 import { format } from 'date-fns';
 
-export const addTopic = async (topic: string, selectedDate: Date) => {
-  const { user } = useAuth();
+export const addTopic = async (topic: string, selectedDate: Date, jwtToken: string) => {
   const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-
-  if (!user?.getIdToken()) {
-    console.error('JWT token is missing');
-    return Promise.reject('JWT token is missing');
+  console.log(jwtToken)
+  if (!jwtToken) {
+    console.error('No JWT token provided.');
+    return Promise.reject('No JWT token provided.');
   }
 
   try {
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/topics`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.getIdToken()}`,
+        Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({ topic, date: formattedDate }),
     });
@@ -33,22 +32,21 @@ export const addTopic = async (topic: string, selectedDate: Date) => {
   }
 };
 
-export const fetchTopics = async (date: Date) => {
-  const { user } = useAuth();
+export const fetchTopics = async (date: Date, jwtToken: string) => {
   const formattedDate = format(date, 'yyyy-MM-dd');
 
-  if (!user?.jwtToken) {
-    console.error('JWT token is missing');
-    return Promise.reject('JWT token is missing');
+  if (!jwtToken) {
+    console.error('No JWT token provided.');
+    return Promise.reject('No JWT token provided.');
   }
 
-  try {
+    try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/topics?date=${formattedDate}`,
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${user.jwtToken}`,
+          Authorization: `Bearer ${jwtToken}`,
         },
       }
     );

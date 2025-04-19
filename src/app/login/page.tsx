@@ -68,7 +68,7 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            className="bg-blue-500 hover:bg-blue-700 text-white rounded focus:outline-none focus:shadow-outline w-full btn"
           >
             Login
           </button>
@@ -76,13 +76,13 @@ const LoginPage = () => {
         </form>
         <button
           onClick={handleGoogleLogin}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4"
+          className="bg-red-500 hover:bg-red-700 text-white rounded focus:outline-none focus:shadow-outline w-full mt-4 btn"
         >
           Sign in with Google
         </button>
         <div className="mt-4 text-center">
-          <Link href="/signup" className="text-blue-500 hover:text-blue-700">
-            No account? Sign up
+          <Link href="/signup" className="btn">
+          No account? Sign up
           </Link>
         </div>
       </div>
