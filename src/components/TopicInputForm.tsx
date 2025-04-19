@@ -4,48 +4,18 @@ import {useState, useEffect} from 'react';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {useToast} from '@/hooks/use-toast';
-import {addTopic} from '@/lib/api';
 import {PlusCircle} from 'lucide-react';
 
 interface TopicInputFormProps {
   selectedDate: Date | undefined;
   setTopics: React.Dispatch<React.SetStateAction<string[]>>;
+  handleSubmit: any;
   topics: string[];
 }
 
-export function TopicInputForm({selectedDate, setTopics, topics}: TopicInputFormProps) {
+export function TopicInputForm({selectedDate, setTopics, topics, handleSubmit}: TopicInputFormProps) {
   const [topic, setTopic] = useState('');
   const {toast} = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!topic) {
-      toast({
-        title: 'Error',
-        description: 'Please enter a topic.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-        await addTopic(topic, selectedDate!);
-
-        toast({
-            title: 'Success',
-            description: `Topic "${topic}" submitted for research.`,
-        });
-
-        setTopic('');
-        setTopics([...topics, topic])
-    } catch (error:any) {
-        toast({
-            title: 'Error',
-            description: error.message || 'Failed to add topic.',
-            variant: 'destructive',
-        });
-    }
-  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

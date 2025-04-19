@@ -20,7 +20,7 @@ export default function Home() {
   const [date, setDate] = useState<Date>(startOfToday());
   const [topics, setTopics] = useState<string[]>([]);
   const router = useRouter();
-  const {user, loading, token} = useAuth();
+  const {user, loading} = useAuth();
 
   const isCurrentDate = date ? format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') : false;
   const isFutureDate = date ? date > new Date() : false;
@@ -43,29 +43,31 @@ export default function Home() {
   useEffect(() => {
     
     const fetchData = async () => {
-      if (!date || !token) return;
+      if (!date || !user) return;
       try {
         const formattedDate = format(date, 'yyyy-MM-dd');
-        const fetchedTopics = await fetchTopics(formattedDate, user?.getIdToken());
+        const token = await user.getIdToken();
+        const fetchedTopics = await fetchTopics(formattedDate, token);
         setTopics(fetchedTopics);        
-      } catch (error) {
+       } catch (error) {
         console.error('Failed to fetch topics:', error);
       }
     };
 
     fetchData();
-  }, [date, token]);
+  }, [date, user]);
 
   const handleAddTopic = async (topic: string) => {
-    if (!date || !token) {
+    if (!date || !user) {
       console.error('Date or token is missing');
       return;
     }
     try {
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      await addTopic(formattedDate, topic, token);
-      console.log("1 "+ user?.getIdToken())
-      const updatedTopics = await fetchTopics(formattedDate, user?.getIdToken());
+      const token = await user.getIdToken();
+      console.log(topic);
+      console.log(token);
+      await addTopic(topic, new Date(), token);
+      const updatedTopics = await fetchTopics(new Date(), token);
       setTopics(updatedTopics);
     } catch (error) {
       console.error('Failed to add topic:', error);
@@ -139,7 +141,7 @@ export default function Home() {
 
         {(isCurrentDate || (date && !isFutureDate)) && (
           <div className="mb-4 border rounded-md p-4">
-            <TopicInputForm selectedDate={date} topics={topics} onAddTopic={handleAddTopic} />
+            <TopicInputForm selectedDate={date} topics={topics} setTopics={setTopics} handleSubmit={handleAddTopic} />
           </div>
         )}
 

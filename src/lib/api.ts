@@ -17,7 +17,7 @@ export const addTopic = async (topic: string, selectedDate: Date, jwtToken: stri
         Authorization: `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({ topic, date: formattedDate }),
-    });
+  });
 
     if (!response.ok) {
         const errorData = await response.json();
